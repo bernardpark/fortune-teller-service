@@ -6,9 +6,6 @@ applications:
   instances: 1
   services:
   - ((database))
-  - ((config_server))
   - ((service_registry))
-  - ((circuit_breaker))
-  - ((cloud_bus))
   env:
     TRUST_CERTS: ((cf_trust_certs))
