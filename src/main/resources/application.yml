@@ -1,0 +1,38 @@
+spring:
+  cloud:
+    config:
+      enabled: true
+  datasource:
+    initialization-mode: always
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL57Dialect
+    hibernate:
+      ddl-auto: create-drop
+
+server:
+  port: 8080
+      
+ribbon:
+  IsSecure: false
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+# Comment out the following section if you'd like to use PCF managed DB.
+#---
+#spring:
+#  profiles: cloud
+#  jpa:
+#    properties:
+#     hibernate:
+#        dialect: org.hibernate.dialect.MySQL57Dialect
+#  datasource:
+#    url: jdbc:mysql://${vcap.services.fortunes-db.credentials.url}:3306/demodb
+#    username: ${vcap.services.fortunes-db.credentials.username}
+#    password: ${vcap.services.fortunes-db.credentials.password}
+   
