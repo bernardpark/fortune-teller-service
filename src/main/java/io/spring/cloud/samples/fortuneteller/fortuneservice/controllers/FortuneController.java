@@ -34,11 +34,6 @@ public class FortuneController {
 
     @Autowired
     FortuneRepository repository;
-    @Value("${api.message:Hello default}")
-    String message;
-    
-    @Autowired
-    PlainTextConfigClient configClient;
 
     @RequestMapping("/fortunes")
     public Iterable<Fortune> fortunes() {
