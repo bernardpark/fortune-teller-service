@@ -7,12 +7,12 @@ if [ -z "$APPPREFIX" ]; then
     APPPREFIX="random"
 fi
 
-echo -n "Database name ['$APPPREFIX-fortunes-db']> "
-read DATABASE
-if [ -z "$DATABASE" ]; then
-    DATABASE="$APPPREFIX-fortunes-db"
+echo -n "CredHub Broker name ['$APPPREFIX-fortunes-credhub']> "
+read CREDHUB
+if [ -z "$CREDHUB" ]; then
+    CREDHUB="$APPPREFIX-fortunes-credhub"
 else
-    DATABASE="$APPPREFIX-$DATABASE"
+    CREDHUB="$APPPREFIX-$CREDHUB"
 fi
 
 echo -n "Service Registry name ['$APPPREFIX-fortunes-service-registry']> "
@@ -27,7 +27,7 @@ fi
 cf delete $APPPREFIX-fortune-service -f
 
 # delete services
-cf delete-service $DATABASE -f
+cf delete-service $CREDHUB -f
 cf delete-service $SERVICEREGISTRY -f
 
 # delete orgphaned routes

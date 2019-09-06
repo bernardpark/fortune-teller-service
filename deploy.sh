@@ -23,12 +23,39 @@ if [ -z "$APPPREFIX" ]; then
     APPPREFIX="random"
 fi
 
-echo -n "Database name ['$APPPREFIX-fortunes-db']> "
-read DATABASE
-if [ -z "$DATABASE" ]; then
-    DATABASE="$APPPREFIX-fortunes-db"
+echo -n "CredHub Broker name ['$APPPREFIX-fortunes-credhub']> "
+read CREDHUB
+if [ -z "$CREDHUB" ]; then
+    CREDHUB="$APPPREFIX-fortunes-credhub"
 else
-    DATABASE="$APPPREFIX-$DATABASE"
+    CREDHUB="$APPPREFIX-$CREDHUB"
+fi
+
+echo -n "External DB URL ['']> "
+read DBURL
+if [ -z "$DBURL" ]; then
+    echo "[ERROR] cannot have an empty url"
+    exit 1
+fi
+
+echo -n "External DB Name ['']> "
+read DBNAME
+if [ -z "$DBNAME" ]; then
+    echo "[ERROR] cannot have an empty password"
+    return 1
+fi
+
+echo -n "External DB Username ['root']> "
+read DBUSER
+if [ -z "$DBUSER" ]; then
+    DBUSER="root"
+fi
+
+echo -n "External DB Password ['']> "
+read DBPASSWORD
+if [ -z "$DBPASSWORD" ]; then
+    echo "[ERROR] cannot have an empty password"
+    return 1
 fi
 
 echo -n "Service Registry name ['$APPPREFIX-fortunes-service-registry']> "
@@ -39,23 +66,21 @@ else
     SERVICEREGISTRY="$APPPREFIX-$SERVICEREGISTRY"
 fi
 
-./mvnw clean package -DskipTests
-
 CF_API=`cf api | head -1 | cut -c 25-`
 
 # Deploy services
 if [[ $CF_API == *"api.run.pivotal.io"* ]]; then
 # Uncomment the following section if you'd like to use PCF managed DB.
-    cf create-service cleardb spark $DATABASE
+    cf create-service credhub default $CREDHUB -c "{ \"url\": \"$DBURL\", \"username\": \"$DBUSER\", \"password\": \"$DBPASSWORD\" }"
     cf create-service p-service-registry trial $SERVICEREGISTRY
 else
-    cf cs p.mysql db-small $DATABASE
+    cf cs credhub default $CREDHUB -c "{ \"url\": \"$DBURL\", \"username\": \"$DBUSER\", \"password\": \"$DBPASSWORD\" }"
     cf cs p-service-registry standard $SERVICEREGISTRY
 fi
 
 # Prepare config file to set TRUST_CERTS value
 echo "app_prefix: $APPPREFIX" > vars.yml
-echo "database: $DATABASE" >> vars.yml
+echo "credhub: $CREDHUB" >> vars.yml
 echo "service_registry: $SERVICEREGISTRY" >> vars.yml
 echo "cf_trust_certs: $CF_API" >> vars.yml
 
@@ -73,5 +98,14 @@ if cf services | grep 'create failed'; then
 fi
 echo "Service initialization - successful"
 
+sed "s/CHANGEMECREDHUB/$CREDHUB/g" src/main/resources/application.yml.template > src/main/resources/application.yml1
+sed "s/CHANGEMEDBNAME/$DBNAME/g" src/main/resources/application.yml1 > src/main/resources/application.yml
+rm src/main/resources/application.yml1
+
+./mvnw clean package -DskipTests
+
+yes yes | cf d $APPPREFIX-fortune-service
+
 # Push apps
 cf push --vars-file vars.yml
+
