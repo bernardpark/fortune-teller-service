@@ -3,14 +3,11 @@
 ## Overview
 This repository is a microservice of the larger [Fortune Teller Application](https://github.com/msathe-tech/fortune-teller) guided as a workshop. This is a single Java/Spring application, with a REST API layer and consuming MySQL backend.
 
-## Spring MVC / Spring Data JPA
-Take a look at the project structure. The spring-boot-starter-web dependency will provide Spring MVC to build out your API layer, and the spring-boot-starter-data-jpa will provide the boilerplate configuration for JPA/Hibernate. In src/main/resources/application.yml, you can notice that Hibernate's SQL dialect is chosen for MySQL, and that the spring.jpa.hibernate.ddl-auto flag is set to `create-drop`. This will execute your `import.sql` file upon application startup to inject initial data.
+## Spring Data JPA
+Notice the differences in the `application.yml` compared to the master branch. You should notice a new `cloud` profile defined at the end of the file. This application assumes that it will be pushed to Cloud Foundry, which recognizes and activates the `cloud` profile when deployed. The variables follow the `${vcap.services.SERVICE_NAME.credentials.VARIABLE_NAME}` naming convention to call the environment variables that are injected with a service broker. In this repository, the `deploy.sh` script will populate custom variable names according to your deployment use case.
 
 ## Service Registry
-By including spring-cloud-services-starter-service-registry, your application will now be registered in your Service Registry service instance in Pivotal Cloud Foundry.
-
-Take a look at src/main/resources/bootstrap.yml as well. This properties file, to be read before your application.yml file, define
-s the name of this application when it is registered in your Service Registry. In the future, you may build out your microservices to reference each service by its registered name.
+There are no changes to the service registry part of this branch.
 
 ## Deploying the Application
 <a href="https://push-to.cfapps.io?repo=https%3A%2F%2Fgithub.com%2Fmsathe-tech%2Ffortune-teller.git">
