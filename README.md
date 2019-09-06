@@ -1,7 +1,7 @@
 # Fortune Teller MicroServices - Fortune Service
 
 ## Overview
-This repository is a microservice of the larger [Fortune Teller Application](https://github.com/msathe-tech/fortune-teller) guided as a workshop. This is a single Java/Spring application, with a REST API layer and consuming MySQL backend.
+This repository is a microservice of the larger [Fortune Teller Application](https://github.com/msathe-tech/fortune-teller) guided as a workshop. This is a single Java/Spring application, with a REST API layer and consuming MySQL backend through the CredHub Service Broker.
 
 ## Spring Data JPA
 Notice the differences in the `application.yml` compared to the master branch. You should notice a new `cloud` profile defined at the end of the file. This application assumes that it will be pushed to Cloud Foundry, which recognizes and activates the `cloud` profile when deployed. The variables follow the `${vcap.services.SERVICE_NAME.credentials.VARIABLE_NAME}` naming convention to call the environment variables that are injected with a service broker. In this repository, the `deploy.sh` script will populate custom variable names according to your deployment use case.
