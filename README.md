@@ -100,7 +100,7 @@ Examine the manifest.yml file to review the application deployment configuration
 1. Notice a random fortune returned.
 
 ## Return to Workshop Respository
-[Fortune Teller Workshop](https://github.com/msathe-tech/fortune-teller)
+[Fortune Teller Workshop](https://github.com/msathe-tech/fortune-teller#lab6-use-credhub-and-an-external-data-backend)
 
 ## Authors
 * **Bernard Park** - [Github](https://github.com/bernardpark)
