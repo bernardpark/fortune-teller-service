@@ -1,6 +1,6 @@
 ---
 applications:
-- name: ((app_prefix))-fortune-service
+- name: ((app_name))
   memory: 1024M
   path: ./target/fortune-teller-service-0.0.2-SNAPSHOT.jar
   instances: 1
